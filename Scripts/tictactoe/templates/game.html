@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Tic Tac Toe</title>
+        <title>Крестики-нолики</title>
         <style>
-            table {
+			div {
+				text-align: center;
+			}
+			table {
                 border-collapse: collapse;
             }
             td {
@@ -17,33 +20,37 @@
                 font-size: 18px;
             }
 			h3 {
-				color: red;
+				color: red; text-align: center;
 			}
         </style>
     </head>
     <body>
 		{% if winner == None %}
-			<h3>Player {{turn}} turn</h3>
+			<h3>Игрок {{turn}} ходит</h3>
 		{%else%}
-			<h3>Game Over</h3>
-			<h3>Winner is {{winner}}</h3>
+			<h3>Игра закончена</h3>
+			<h3>Победитель игрок <b>{{winner}}</b></h3>
 		{% endif %}	
-        <table>
-            {% for i in range(3) %}
-                <tr>
-                    {% for j in range(3) %}
-                        <td>
-                            {% if game[i][j] %}
-                                {{ game[i][j] }}
-                            {% else %}
-                                <a href="{{ url_for('play', row=i, col=j) }}">Play {{ turn }} here.</a>
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
+		<table align = "center">
+			{% for i in range(3) %}
+				<tr>
+					{% for j in range(3) %}
+						<td>
+							{% if game[i][j] %}
+								{{ game[i][j] }}
+							{% else %}
+								<a href="{{ url_for('play', row=i, col=j) }}"><b>{{ turn }}</b> нажми меня</a>
+							{% endif %}
+						</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</table>
 		<br>
-		<a href="{{ url_for('newgame') }}" style ='color: gold'>New Game</a>		
+		<div>
+			<a href="{{ url_for('newgame') }}" style ='color: green;'>Новая игра</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{{ url_for('undo') }}" style ='color: green;'>Отмена хода</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{{ url_for('auto') }}" style ='color: green;'>Ход компьютера</a>
+		</pre>
     </body>
 </html>
