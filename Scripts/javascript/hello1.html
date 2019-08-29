@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello</title>
+		<script>		
+			document.addEventListener("DOMContentLoaded", function() {document.querySelector("#but1").onclick = count});
+		</script>
+	</head>	
+	<body>
+		<h1 id="counter">0</h1>
+		<button onClick="count()">Count</button><br>
+		<button id="but">Count</button><br>
+		<button id="but1">Count</button>
+		<script>
+			let counter = 0;
+			document.querySelector("#but").onclick = count
+			function count() {
+				counter++;
+				document.querySelector("#counter").innerHTML = counter;
+			}			
+		</script>
+	</body>
+</html>
