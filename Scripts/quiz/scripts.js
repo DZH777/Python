@@ -44,7 +44,17 @@ function load_question() {
 	
 	document.querySelectorAll(".option").forEach(option => {
 		option.onclick = () => {
-				alert(option.textContent);
+				if (option.textContent == questions[question_number-1].answer) {
+					correct++;
+				}
+				document.querySelector("#correct").innerHTML = correct + ' of ' + question_number;
+				if (question_number <= 4) {
+					load_question();
+				} else {
+					document.querySelector("#question").innerHTML = 'Опросник завершен';
+					document.querySelector("#options").innerHTML = '<a href=quiz.html>Повторить опросник</a><br><br>';
+					
+				}
 		}
 	});
 	
