@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hello</title>
+		<script>		
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelector('#form').onsubmit = () => {
+					const currency = document.querySelector('#currency').value;
+					fetch(`https://api.ratesapi.io/api/latest?base=RUB&symbols=${currency}`)
+					.then( resp => resp.json())
+					.then( data => {
+						const contents = `100 RUB можно обменять на ${data.rates[currency]*100} ${currency}.`
+						document.querySelector('#result').innerHTML = contents;
+					})
+					.catch( () => {
+						document.querySelector('#result').innerHTML = 'Ошибка, повторите ввод кода валюты';
+					});
+
+					return false;
+				};
+			});
+		</script>
+	</head>	
+	<body>
+		<form id="form">
+			<input id = "currency" autocomplete="off" autofocus placeholder="Currency" type="text">
+			<input type = "submit" value ="Получить курс обмена">
+		</form>
+		<br>
+		<div id = "result"></div>
+	</body>
+</html>
