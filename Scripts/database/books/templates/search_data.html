@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Поиск книг
+{% endblock %}
+
+{% block body %}
+		<br><br>
+		<form action="{{ url_for('search_data') }}" method="post">
+			<input class="form-control" size = 30 name="name" placeholder="Введите название книги или автора"> <button class="btn btn-primary">Поиск</button>
+		</form>
+		{% if (books|count > 0) %}
+			<br>
+		{% endif %}	
+		<table>
+			{% for book in books %}
+				{% if (loop.index != 1) %}
+					<tr><td>{{book[0]}}</td><td>{{book[1]}}</td><td>{{book[2]}}</td><td>{{book[3]}}</td></tr>
+				{% else %}	
+            		<tr><th>{{book[0]}}</th><th>{{book[1]}}</th><th>{{book[2]}}</th><th>{{book[3]}}</th></tr>
+				{% endif %}
+			{% endfor %}
+		</table>
+		<br>
+{% endblock %}

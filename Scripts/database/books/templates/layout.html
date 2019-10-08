@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+		<style> 
+			h1 {font-size: 16px;} 
+			table {border: 1px solid black; border-collapse: collapse; font-size: 20px; text-align: center;}
+			th {border: 1px solid black; color: red; font-weight: bold; text-transform: uppercase;}			
+			td {border: 1px solid black; color: blue;}			
+		</style>
+
+    </head>
+    <body>
+        <div class="container">
+			<a href="{{ url_for('index') }}" title="Вернуться на главную страницу">В начало</a>
+			{% block body %}
+            {% endblock %}
+			<a href="{{ url_for('index') }}" title="Вернуться на главную страницу">В начало</a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Книги</title>
+		<style> 
+			ul {font-size: 20px;}
+			a {color: green;}			
+		</style>
+	</head>	
+	<body>
+		<ul>
+			<li><a href="{{ url_for('import_data') }}" title="Импортирует данные в БД">Импорт книг</a>
+			<li><a href="{{ url_for('clear_data') }}" title="Очищает данные в БД">Очистка книг</a>
+			<li><a href="{{ url_for('search_data') }}" title="Поиск данных по БД">Поиск книг</a>
+		</ul>
+	</body>
+</html>
