@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Информация о книге
+{% endblock %}
+
+{% block body %}
+    <h2>Книга</h2>
+    <ul>
+        <li><b>ISBN:</b> {{ book.isbn }}</li>
+        <li><b>Название:</b> {{ book.title }}</li>
+		<li><b>Год:</b> {{ book.year }}</li>
+    </ul>
+    <h2>Автор</h2>
+    <ul>
+		<li><a href="{{ url_for('authors', aid=author.id) }}">{{ author.name }}</a></li>
+    </ul>	
+{% endblock %}
+
+

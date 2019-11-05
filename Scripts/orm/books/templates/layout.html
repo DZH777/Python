@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+		<style> 
+			h1 {font-size: 16px;} 
+			table {border: 1px solid black; border-collapse: collapse; font-size: 20px; text-align: center;}
+			th {border: 1px solid black; color: red; font-weight: bold; text-transform: uppercase;}			
+			td {border: 1px solid black; color: blue;}			
+		</style>
+
+    </head>
+    <body>
+        <div class="container">
+			<a href="{{ url_for('index') }}" title="Вернуться на страницу поиска">В начало</a>
+			<hr align="center" width=100% size="2" color="#ff0000" />
+			{% block body %}
+            {% endblock %}
+			<hr align="center" width=100% size="2" color="#ff0000" />
+			<a href="{{ url_for('index') }}" title="Вернуться на страницу поиска">В начало</a>
+        </div>
+    </body>
+</html>

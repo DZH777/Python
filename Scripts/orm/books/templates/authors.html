@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Информация об авторе
+{% endblock %}
+
+{% block body %}
+    <h2>Автор</h2>
+    <ul>
+		<li>{{ author.name }}</li>
+    </ul>
+    <h2>Книги</h2>
+    <ul>
+        {% for book in books %}
+            <li><a href="{{ url_for('books', bid=book.id) }}">{{ book.title }}</a></li>
+        {% else %}
+            <li>No books.</li>
+        {% endfor %}
+    </ul>		
+{% endblock %}
+

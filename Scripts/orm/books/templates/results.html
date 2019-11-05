@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Результаты поиска
+{% endblock %}
+
+{% block body %}
+	<h1>Результаты поиска: {{tag}}</h1>
+    <h2>Авторы</h2>
+    <ul>
+        {% for author in authors %}
+            <li><a href="{{ url_for('authors', aid=author.id) }}">{{ author.name }}</a></li>
+        {% else %}
+            <li>No authors.</li>
+        {% endfor %}
+    </ul>
+    <h2>Книги</h2>
+    <ul>
+        {% for book in books %}
+            <li><a href="{{ url_for('books', bid=book.id) }}">{{ book.title }}</a></li>
+        {% else %}
+            <li>No books.</li>
+        {% endfor %}
+    </ul>		
+{% endblock %}
