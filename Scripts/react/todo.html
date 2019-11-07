@@ -4,7 +4,12 @@
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <title>Задачи</title>
+	<style>
+		.m {margin:10px;}
+		.c {text-align:center; color: brown;}
+		.p {position: relative; left: 503px; background: #f0f0f0; width:280px; text-align:left; color: blue;}
+	</style>
+	<title>Список задач</title>
   </head>
   <body>
     <div id="app"/>
@@ -16,22 +21,25 @@
 			super(props);
 			this.state = {
 				tasks: [],
+				cnt: 0,
 				input: ""
 			}
 		}
 
         render() {
           return (
-            <div>
-              <h1>Tasks</h1>
+            <div className="c">
+              <h1>Список задач</h1>
+			  <h3>Количество задач: {this.state.cnt}</h3>
 			  <div>
-					<input onChange={this.handleChange} value={this.state.input}/>
+					<input onChange={this.handleChange} value={this.state.input}/><span> </span>
 					<button onClick={this.addTask}>Добавить задачу</button>
 			  </div>
 			  <ul>
 				{this.state.tasks.map((task, i) =>
-					<li key={i}>
-						{task} {i}
+					<li key={i} className="p" > 
+						<input value={i} type="checkbox" checked="checked" onChange={this.removeTask} />
+						{task}
 					</li>
 				)}
 			  </ul>
@@ -46,12 +54,23 @@
 		}
 		
 		addTask = () => {
-			this.setState(state => ({
-				tasks: [...state.tasks, state.input]
-			}));
+			if (this.state.input != "") {
+				this.setState(state => ({
+					tasks: [...state.tasks, state.input],
+					input: "",
+					cnt: state.cnt + 1
+				}));
+			}
 		}
 		
-		
+		removeTask = (event) => {
+			const temp = [...this.state.tasks]; // make a separate copy of the array
+			temp.splice(parseInt(event.target.value), 1);
+			this.setState(state =>({
+				tasks: temp,
+				cnt: state.cnt - 1
+			}));
+		}	
       }
 
       ReactDOM.render(<App />, document.querySelector("#app"));
