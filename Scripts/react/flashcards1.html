@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+	<style>
+		.m {margin:10px;}
+		.c {text-align:center; color: brown;}
+		.p {position: relative; left: 503px; background: #f0f0f0; width:280px; text-align:left; color: blue;}
+		.b {position: relative; top: 10px; width: 200px;}		
+		.b1 {width: 200px; margin:2px}		
+		.s {position: relative; top: 10px;}
+		table, th, td {margin-left:auto; margin-right:auto; border: 1px solid black; width:50%;}
+		.card {text-align:center; background-color: #BFC9CA; height:100px; width:40%; margin-left:auto; margin-right:auto; border: 1px solid black; width:50%; font-size:xx-large;}		
+		.but{position: absolute; top:77px; left:1420px; width:250px; height: 50px;}		
+		.test1{background-color:green;}	
+		.test2{background-color:blue;}	
+	</style>
+	<title>Карты</title>
+  </head>
+  <body>
+    <div id="app"/>
+    <script type="text/babel">
+
+	  class CardEditor extends React.Component {
+
+			constructor(props) {
+				super(props);
+				this.state = {
+					front:"",
+					back:"",
+					learned:false
+				};
+			}
+
+	  
+			render() {
+			  
+			  const rows = this.props.cards.map((card, i) => {
+				return (
+					<tr key={i}>
+						<td>{card.front}</td><td>{card.back}</td><td><input data-index={i} type="checkbox" onClick={this.learnedCard} defaultChecked={card.learned} /></td><td><button data-index={i} onClick={this.deleteCard}>Удалить</button></td>
+					</tr>
+				);
+			  })
+			  
+			  return (
+				<div className="c">
+				  <h1>Редактор карт</h1>
+				  <div>
+						Перед <input name="front" value={this.state.front} onChange={this.handleChange}/><span> </span>
+						Зад <input name="back" value={this.state.back} onChange={this.handleChange} /><span> </span>					
+						<button onClick={this.addCard}>Добавить карту</button>
+				  </div>				
+				  <hr className="s"></hr>
+				  <div>
+					<button className="b" onClick={this.props.switchMode}>Просмотр карт</button>
+				  </div>
+				  <hr className="s"></hr>
+				  <h3>Карты:{this.props.cards.length}</h3>
+				  <div>
+					  <table className="center">
+						<thead>
+							<tr><th>Перед</th><th>Зад</th><th>Изучено</th><th>Удаление</th></tr>
+						</thead>	
+						<tbody>
+							{rows}
+						</tbody>						
+					  </table>
+				  </div>
+				</div>
+			  );
+			}
+
+			handleChange = (event) => {
+				this.setState({
+					[event.target.name]: event.target.value
+				});
+			}
+			
+			addCard = () => {
+				if (this.state.front != "" && this.state.back != "") {
+					this.props.addCard(this.state.front, this.state.back, this.state.learned);
+					this.setState({
+						front:"",
+						back:"",
+						learned:false
+					});
+				}
+			}	
+
+			deleteCard = (event) => {
+				this.props.deleteCard(event.target.dataset.index);
+			}		
+
+			learnedCard = (event) => {
+				this.props.learnedCard(event.target.dataset.index);
+			}					
+			
+			
+	  }
+	  
+	  class CardViewer extends React.Component {
+	  
+			constructor(props) {
+				super(props);
+			}	  
+
+			render() {
+			  /* всегда только первый элемент */
+			  const rows = this.props.cards.slice(this.props.cartIdx, this.props.cartIdx + 1).map((card, i) => {
+				if (this.props.turn) {
+					return (
+						<tr key={i}>
+							<td onClick={this.props.turnCard}>{card.front}</td>
+						</tr> );	 				
+				} else {
+					return (					
+						<tr key={i}>
+							<td onClick={this.props.turnCard}>{card.back}</td>
+						</tr> );
+				}
+			  })
+			
+				return (
+				<div className="c">			  
+					<div className="c">
+					  <h1>Просмотр карт</h1>
+					</div>
+					<div>
+						<table className="card">
+						<tbody>{rows}</tbody>
+						</table>
+					</div>
+					<div className="but">
+					    <button className="b1" onClick={this.props.mixCard}>Перемешать карты</button><br/>
+					    <button className="b1" onClick={this.learnedCard}>Выучить карту</button>
+					</div>					
+					<div>
+					  <button className="b1" onClick={this.newCard}>Новая карта</button>
+					</div>				    
+					<hr className="s"></hr>
+   				    <div>
+					  <button className="b" onClick={this.props.switchMode}>Редактор карт</button>
+					</div>		
+				    <hr className="s"></hr>					
+				</div>	
+			  );
+			}
+			
+			newCard = () => {
+				if (this.props.cartIdx >= 0) {
+					this.props.newCard(this.props.cartIdx);
+				}
+			}			
+			
+			learnedCard = (event) => {
+				this.props.learnedCard(this.props.cartIdx);
+			}			
+			
+			
+	  }
+	  
+      class App extends React.Component {
+
+			constructor(props) {
+				super(props);
+				this.state = {
+					editor: true,
+					cards: [],
+					turn:true,
+					cartIdx: 0,
+					mix: 0
+				}
+			}
+
+			render() {
+				if (this.state.editor) {
+					return (
+						<CardEditor 
+							cards={this.state.cards}
+							learned={this.state.learned}
+							switchMode={this.switchMode}
+							addCard={this.addCard}
+							deleteCard={this.deleteCard}
+							learnedCard={this.learnedCard}
+						/>
+					);
+				} else {
+					return (
+						<CardViewer 
+							cards={this.state.cards}
+							turn={this.state.turn}
+							cartIdx={this.state.cartIdx}
+							mix={this.state.mix}
+							newCard={this.newCard}							
+							turnCard={this.turnCard}
+							mixCard={this.mixCard}
+							switchMode={this.switchMode}	
+							learnedCard={this.learnedCard}
+						/>
+					);				
+				}
+			}
+			
+			
+			checkIdx = () => {
+				var cartIdxtNL = -1;
+				for (var idx in this.state.cards) {
+					if (!this.state.cards[idx].learned) {
+						cartIdxtNL = idx;
+						break;
+					}
+				}
+				return cartIdxtNL;			
+			}
+			
+			getNewIdx = (idx) => {
+				var cartIdxNew = -1;
+				if (parseInt(idx) + 1 === this.state.cards.length) {
+					cartIdxNew = 0;
+				} else {
+					cartIdxNew = parseInt(idx) + 1;
+				}
+				return cartIdxNew;
+			}
+			
+			checkLearned = (idx) => {
+				if (this.state.cards[idx].learned) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+			
+			switchMode = () => {
+				this.setState(state => ({
+					editor: !state.editor,
+					turn:true,
+					cartIdx: this.checkIdx(),
+					mixCard: 0					
+				}));
+			}
+			
+			addCard = (front, back, learned) => {
+				this.setState(state => ({
+					cards: [...state.cards, {front: front, back: back, learned: learned}]
+				}));
+			}
+			
+			deleteCard = (index) => {
+				this.setState(state => {
+					const cards = [...state.cards];
+					cards.splice(index, 1);
+					return {cards};
+				});
+			}
+			
+			turnCard = () => {
+				this.setState(state => ({
+					turn: !state.turn
+				}));
+			}	
+
+			newCard = (idx) => {
+				var cartIdx = idx;
+				var isLearned = true;
+				if (this.state.mix != 1 ) {
+					do {
+					  cartIdx = this.getNewIdx(cartIdx);
+					  isLearned = this.checkLearned(cartIdx);
+					}
+					while ((parseInt(idx) != parseInt(cartIdx)) && (isLearned === true));
+					if (isLearned) {
+						this.setState(state => ({
+							cartIdx: -1,
+							turn: true
+						}));
+					} else if (parseInt(idx) != parseInt(cartIdx)) {
+						this.setState(state => ({
+							cartIdx: cartIdx,
+							turn: true
+						}));				
+					} else {
+						this.setState(state => ({
+							cartIdx: idx,
+							turn: true
+						}));									
+					}
+				}
+				
+				if (this.state.mix === 1 ) {
+					do {
+					  cartIdx = Math.floor(Math.random() * Math.floor(this.state.cards.length));
+					  isLearned = this.checkLearned(cartIdx);
+					}
+					while ((this.checkIdx() != -1) && (isLearned === true));
+					if (isLearned) {
+						this.setState(state => ({
+							cartIdx: -1,
+							turn: true
+						}));
+					} else if (parseInt(idx) != parseInt(cartIdx)) {
+						this.setState(state => ({
+							cartIdx: cartIdx,
+							turn: true
+						}));				
+					} else {
+						this.setState(state => ({
+							cartIdx: idx,
+							turn: true
+						}));									
+					}
+				}				
+				
+				
+			}	
+
+			mixCard = () => {
+				this.setState(state => ({
+					mix: 1
+				}));
+			}			
+			
+			learnedCard = (index) => {
+				this.state.cards[index].learned = !this.state.cards[index].learned;
+			}			
+			
+	  }
+			
+      ReactDOM.render(<App />, document.querySelector("#app"));
+
+    </script>
+  </body>
+</html>

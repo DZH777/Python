@@ -30,7 +30,7 @@
           return (
             <div className="c">
               <h1>Список задач</h1>
-			  <h3>Количество задач: {this.state.cnt}</h3>
+			  <h3>Количество задач: {this.state.tasks.length}</h3>
 			  <div>
 					<input onChange={this.handleChange} value={this.state.input}/><span> </span>
 					<button onClick={this.addTask}>Добавить задачу</button>
@@ -38,7 +38,7 @@
 			  <ul>
 				{this.state.tasks.map((task, i) =>
 					<li key={i} className="p" > 
-						<input value={i} type="checkbox" checked="checked" onChange={this.removeTask} />
+						<input data-index={i} type="checkbox" checked="checked" onChange={this.removeTask} />
 						{task}
 					</li>
 				)}
@@ -58,17 +58,15 @@
 				this.setState(state => ({
 					tasks: [...state.tasks, state.input],
 					input: "",
-					cnt: state.cnt + 1
 				}));
 			}
 		}
 		
 		removeTask = (event) => {
 			const temp = [...this.state.tasks]; // make a separate copy of the array
-			temp.splice(parseInt(event.target.value), 1);
-			this.setState(state =>({
-				tasks: temp,
-				cnt: state.cnt - 1
+			temp.splice(event.target.dataset.index, 1);
+			this.setState(state => ({
+				tasks: temp
 			}));
 		}	
       }
