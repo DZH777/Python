@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 def load_uls_from_file(file_path: str):
     try:
         with open(file_path) as file:
-            content = file.readline()
+            content = file.readlines()
             return content
     except FileNotFoundError:
         print("The file", file_path, "could not be found.")
