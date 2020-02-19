@@ -1,10 +1,10 @@
-import os
 import argparse
 
 
-def main(database, url_file):
-    print("We are going to work with", database)
-    print("We are going to scan with", url_file)
+def main(pi_database, pi_url_file):
+    print("We are going to work with", pi_database)
+    print("We are going to scan with", pi_url_file)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
