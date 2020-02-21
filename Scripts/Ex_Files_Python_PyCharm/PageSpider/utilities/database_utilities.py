@@ -1,7 +1,42 @@
-def create_databse(database_path: str):
-    #TODO: generate the database
-    pass
+import sqlite3 as lite
+
+
+def create_database(database_path: str):
+    conn = lite.connect(database_path)
+    with conn:
+        cur = conn.cursor()
+        cur.execute("drop table if exists words")
+        ddl = "create table words (word text primary key not null, usage_count int default 1 not null); "
+        cur.execute(ddl)
+        ddl = "create unique index words_word_uindex on words(word);"
+        cur.execute(ddl)
+    conn.close()
+
 
 def save_words_to_database(database_path: str, word_lists: list):
-    #TODO: save the words to the database
-    pass
+    conn = lite.connect(database_path)
+    with conn:
+        cur = conn.cursor()
+        for word in word_lists:
+            sql = "select count(word) from words where word = '" + word + "'"
+            cur.execute(sql)
+            count = cur.fetchone()[0]
+            if count > 0:
+                sql = "update words set usage_count = usage_count + 1 where word = '" + word + "'"
+            else:
+                sql = "insert into words(word) values ('" + word + "')"
+            cur.execute(sql)
+    conn.close()
+    print("Database saved")
+
+
+def check_data(database_path: str):
+    conn = lite.connect(database_path)
+    with conn:
+        cur = conn.cursor()
+        sql = "select * from words order by usage_count desc"
+        cur.execute(sql)
+        data = cur.fetchall()
+        for d in data:
+            print(f'{d[0]:11} = {d[1]:5}')
+    conn.close()

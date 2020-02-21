@@ -23,14 +23,16 @@ def load_page(url: str):
 
 def scrape_page(page_contents: str):
     chicken_noodle = BeautifulSoup(page_contents, "html5lib")
-
+    # remove all javascript and stylesheet code
     for script in chicken_noodle(["script", "style"]):
         script.extract()
-
+    # get text
     text = chicken_noodle.get_text()
+    # break into lines and remove leading and trailing space on each
     lines = (line.strip() for line in text.splitlines())
+    # break multi-headlines into a line each
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-
+    # drop blank lines
     text = ' '.join(chunk for chunk in chunks if chunk)
     plain_text = ''.join(filter(lambda x: x in string.printable, text))
 
@@ -45,11 +47,11 @@ def scrape_page(page_contents: str):
             if punctuation_marks in word:
                 clean = False
 
-                # no numbers
+            # no numbers
             if any(char.isdigit() for char in word):
                 clean = False
 
-                # at least two characters but no more than 10
+            # at least two characters but no more than 10
             if len(word) < 2 or len(word) > 10:
                 clean = False
 
